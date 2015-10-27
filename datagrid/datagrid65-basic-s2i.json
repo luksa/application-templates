@@ -363,10 +363,14 @@
                                     },
                                     {
                                         "name": "INFINISPAN_CONNECTORS",
-                                        "value": "rest"
+                                        "value": "memcached,rest"
                                     },
                                     {
                                         "name": "REST_CACHE_CONTAINER",
+                                        "value": "clustered"
+                                    },
+                                    {
+                                        "name": "MEMCACHED_CACHE_CONTAINER",
                                         "value": "clustered"
                                     }
                                 ]
