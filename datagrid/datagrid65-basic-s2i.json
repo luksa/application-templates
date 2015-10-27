@@ -368,26 +368,6 @@
                                     {
                                         "name": "REST_CACHE_CONTAINER",
                                         "value": "clustered"
-                                    },
-                                    {
-                                        "name": "REST_CONTEXT_PATH",
-                                        "value": "rest"
-                                    },
-                                    {
-                                        "name": "REST_SECURITY_DOMAIN",
-                                        "value": "other"
-                                    },
-                                    {
-                                        "name": "REST_AUTH_METHOD",
-                                        "value": "basic"
-                                    },
-                                    {
-                                        "name": "REST_SECURITY_MODE",
-                                        "value": "READ_WRITE"
-                                    },
-                                    {
-                                        "name": "REST_EXTENDED_HEADERS",
-                                        "value": "ON_DEMAND"
                                     }
                                 ]
                             }
