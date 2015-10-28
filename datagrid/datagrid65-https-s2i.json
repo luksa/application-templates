@@ -289,9 +289,9 @@
             "required": true
         },
         {
-            "description": "",
+            "description": "The name of the cache to expose through this memcached connector (defaults to 'default')",
             "name": "MEMCACHED_CACHE",
-            "value": "",
+            "value": "default",
             "required": false
         },
         {
@@ -301,9 +301,9 @@
             "required": true
         },
         {
-            "description": "",
+            "description": "The name of this memcached connector (defaults to 'memcached')",
             "name": "MEMCACHED_NAME",
-            "value": "",
+            "value": "memcached",
             "required": false
         },
         {
