@@ -88,6 +88,54 @@
             "name": "IMAGE_STREAM_NAMESPACE",
             "value": "openshift",
             "required": true
+        },
+        {
+            "description": "Comma-separated list of connector types that should be configured (defaults to 'memcached,hotrod,rest')",
+            "name": "INFINISPAN_CONNECTORS",
+            "value": "rest",
+            "required": false
+        },
+        {
+            "description": "The virtual server used by the REST connector (defaults to 'default-host')",
+            "name": "REST_VIRTUAL_SERVER",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "The cache container used by the REST connector (defaults to 'clustered')",
+            "name": "REST_CACHE_CONTAINER",
+            "value": "clustered",
+            "required": true
+        },
+        {
+            "description": "The context path for the REST connector (defaults to '')",
+            "name": "REST_CONTEXT_PATH",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "The domain, declared in the security subsystem, that should be used to authenticate access to the REST endpoint",
+            "name": "REST_SECURITY_DOMAIN",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "The method used to retrieve credentials for the REST endpoint (defaults to 'BASIC')",
+            "name": "REST_AUTH_METHOD",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "Whether authentication is required only for WRITE operations or for READ operations as well (defaults to 'READ_WRITE')",
+            "name": "REST_SECURITY_MODE",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "",
+            "name": "REST_EXTENDED_HEADERS",
+            "value": "",
+            "required": false
         }
     ],
     "objects": [
@@ -459,6 +507,38 @@
                                                 "fieldPath": "metadata.namespace"
                                             }
                                         }
+                                    },
+                                    {
+                                        "name": "INFINISPAN_CONNECTORS",
+                                        "value": "${INFINISPAN_CONNECTORS}"
+                                    },
+                                    {
+                                        "name": "REST_VIRTUAL_SERVER",
+                                        "value": "${REST_VIRTUAL_SERVER}"
+                                    },
+                                    {
+                                        "name": "REST_CACHE_CONTAINER",
+                                        "value": "${REST_CACHE_CONTAINER}"
+                                    },
+                                    {
+                                        "name": "REST_CONTEXT_PATH",
+                                        "value": "${REST_CONTEXT_PATH}"
+                                    },
+                                    {
+                                        "name": "REST_SECURITY_DOMAIN",
+                                        "value": "${REST_SECURITY_DOMAIN}"
+                                    },
+                                    {
+                                        "name": "REST_AUTH_METHOD",
+                                        "value": "${REST_AUTH_METHOD}"
+                                    },
+                                    {
+                                        "name": "REST_SECURITY_MODE",
+                                        "value": "${REST_SECURITY_MODE}"
+                                    },
+                                    {
+                                        "name": "REST_EXTENDED_HEADERS",
+                                        "value": "${REST_EXTENDED_HEADERS}"
                                     }
                                 ]
                             }
