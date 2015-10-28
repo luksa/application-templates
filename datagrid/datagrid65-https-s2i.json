@@ -92,9 +92,65 @@
         {
             "description": "Comma-separated list of connector types that should be configured (defaults to 'memcached,hotrod,rest')",
             "name": "INFINISPAN_CONNECTORS",
-            "value": "rest",
+            "value": "memcached,rest",
             "required": false
         },
+        {
+            "description": "The cache container used by the memcached connector (defaults to 'clustered')",
+            "name": "MEMCACHED_CACHE_CONTAINER",
+            "value": "clustered",
+            "required": true
+        },
+        {
+            "description": "",
+            "name": "MEMCACHED_CACHE",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "The socked binding port used by the memcached connector (defaults to 'memcached')",
+            "name": "MEMCACHED_SOCKET_BINDING",
+            "value": "memcached",
+            "required": true
+        },
+        {
+            "description": "",
+            "name": "MEMCACHED_NAME",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "The number of worker threads available for the memcached connector (defaults to 160)",
+            "name": "MEMCACHED_WORKER_THREADS",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "The time (in milliseconds) the connector can remain idle before the connection times out (defaults to -1 - no timeout)",
+            "name": "MEMCACHED_IDLE_TIMEOUT",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "Whether TCP packets will be delayed and sent out in batches (defaults to true)",
+            "name": "MEMCACHED_TCP_NODELAY",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "The size of the send buffer for the memcached connector (defaults to the size of the TCP stack buffer)",
+            "name": "MEMCACHED_SEND_BUFFER_SIZE",
+            "value": "",
+            "required": false
+        },
+        {
+            "description": "The size of the receive buffer for the memcached connector (defaults to the size of the TCP stack buffer)",
+            "name": "MEMCACHED_RECEIVE_BUFFER_SIZE",
+            "value": "",
+            "required": false
+        },
+
+
         {
             "description": "The virtual server used by the REST connector (defaults to 'default-host')",
             "name": "REST_VIRTUAL_SERVER",
@@ -512,6 +568,44 @@
                                         "name": "INFINISPAN_CONNECTORS",
                                         "value": "${INFINISPAN_CONNECTORS}"
                                     },
+
+                                    {
+                                        "name": "MEMCACHED_CACHE_CONTAINER",
+                                        "value": "${MEMCACHED_CACHE_CONTAINER}"
+                                    },
+                                    {
+                                        "name": "MEMCACHED_CACHE",
+                                        "value": "${MEMCACHED_CACHE}"
+                                    },
+                                    {
+                                        "name": "MEMCACHED_SOCKET_BINDING",
+                                        "value": "${MEMCACHED_SOCKET_BINDING}"
+                                    },
+                                    {
+                                        "name": "MEMCACHED_NAME",
+                                        "value": "${MEMCACHED_NAME}"
+                                    },
+                                    {
+                                        "name": "MEMCACHED_WORKER_THREADS",
+                                        "value": "${MEMCACHED_WORKER_THREADS}"
+                                    },
+                                    {
+                                        "name": "MEMCACHED_IDLE_TIMEOUT",
+                                        "value": "${MEMCACHED_IDLE_TIMEOUT}"
+                                    },
+                                    {
+                                        "name": "MEMCACHED_TCP_NODELAY",
+                                        "value": "${MEMCACHED_TCP_NODELAY}"
+                                    },
+                                    {
+                                        "name": "MEMCACHED_SEND_BUFFER_SIZE",
+                                        "value": "${MEMCACHED_SEND_BUFFER_SIZE}"
+                                    },
+                                    {
+                                        "name": "MEMCACHED_RECEIVE_BUFFER_SIZE",
+                                        "value": "${MEMCACHED_RECEIVE_BUFFER_SIZE}"
+                                    },
+
                                     {
                                         "name": "REST_VIRTUAL_SERVER",
                                         "value": "${REST_VIRTUAL_SERVER}"
