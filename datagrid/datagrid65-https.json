@@ -503,6 +503,9 @@
                 "host": "${APPLICATION_DOMAIN}",
                 "to": {
                     "name": "${APPLICATION_NAME}-memcached"
+                },
+                "tls": {
+                    "termination": "edge"
                 }
             }
         },
