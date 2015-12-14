@@ -216,7 +216,7 @@
             "spec": {
                 "ports": [
                     {
-                        "port": 11222,
+                        "port": 11333,
                         "targetPort": 11333
                     }
                 ],
@@ -388,6 +388,11 @@
                                     {
                                         "name": "hotrod",
                                         "containerPort": 11222,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "hotrodexternal",
+                                        "containerPort": 11333,
                                         "protocol": "TCP"
                                     }
                                 ],
