@@ -210,7 +210,7 @@
                 "name": "jboss-amq-62"
             },
             "spec": {
-                "dockerImageRepository": "registry.access.redhat.com/jboss-amq-6/amq62-openshift",
+                "dockerImageRepository": "ce-os-registry.usersys.redhat.com:5000/alesj/amq62-openshift",
                 "tags": [
                     {
                         "name": "1.1",
