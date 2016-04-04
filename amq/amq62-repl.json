@@ -222,7 +222,7 @@
                                 "imagePullPolicy": "Always",
                                 "volumeMounts": [
                                     {
-                                        "mountPath": "/opt/amq/data/kahadb",
+                                        "mountPath": "/opt/amq/data",
                                         "name": "${APPLICATION_NAME}-amq-pvol"
                                     }
                                 ],
