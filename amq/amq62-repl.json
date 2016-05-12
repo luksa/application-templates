@@ -264,6 +264,10 @@
                                 ],
                                 "env": [
                                     {
+                                        "name": "APPLICATION_NAME",
+                                        "value": "${APPLICATION_NAME}"
+                                    },
+                                    {
                                         "name": "AMQ_USER",
                                         "value": "${MQ_USERNAME}"
                                     },
