@@ -235,6 +235,13 @@
                                         ]
                                     }
                                 },
+                                "lifecycle": {
+                                    "preStop": {
+                                        "exec": {
+                                            "command": ["/opt/amq/bin/drain.sh"]
+                                        }
+                                    }
+                                },
                                 "ports": [
                                     {
                                         "name": "jolokia",
