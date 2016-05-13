@@ -60,6 +60,12 @@
             "required": false
         },
         {
+            "description": "The A-MQ data dir split",
+            "name": "AMQ_SPLIT",
+            "value": "true",
+            "required": false
+        },
+        {
             "description": "The A-MQ storage usage limit",
             "name": "AMQ_STORAGE_USAGE_LIMIT",
             "value": "100 gb",
@@ -293,6 +299,10 @@
                                     {
                                         "name": "AMQ_TOPICS",
                                         "value": "${MQ_TOPICS}"
+                                    },
+                                    {
+                                        "name": "AMQ_SPLIT",
+                                        "value": "${AMQ_SPLIT}"
                                     },
                                     {
                                         "name": "AMQ_STORAGE_USAGE_LIMIT",
