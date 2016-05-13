@@ -201,7 +201,7 @@
                         "type": "ConfigChange"
                     }
                 ],
-                "replicas": 2,
+                "replicas": 3,
                 "selector": {
                     "deploymentConfig": "${APPLICATION_NAME}-amq"
                 },
