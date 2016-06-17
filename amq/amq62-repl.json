@@ -284,7 +284,7 @@
                                 "env": [
                                     {
                                         "name": "NAMESPACE",
-                                        "valueFrom" : { "fieldRef" : { "fieldPath": "metadata.namespace"}},
+                                        "valueFrom" : { "fieldRef" : { "fieldPath": "metadata.namespace"}}
                                     },
                                     {
                                         "name": "APPLICATION_NAME",
