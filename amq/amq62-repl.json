@@ -250,7 +250,7 @@
                                 "lifecycle": {
                                     "preStop": {
                                         "exec": {
-                                            "command": ["/opt/amq/bin/drain.sh"]
+                                            "command": ["/opt/amq/bin/drain-job.sh"]
                                         }
                                     }
                                 },
