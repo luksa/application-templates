@@ -247,13 +247,6 @@
                                         ]
                                     }
                                 },
-                                "lifecycle": {
-                                    "preStop": {
-                                        "exec": {
-                                            "command": ["/opt/amq/bin/drain-job.sh"]
-                                        }
-                                    }
-                                },
                                 "ports": [
                                     {
                                         "name": "jolokia",
@@ -286,6 +279,145 @@
                                         "name": "NAMESPACE",
                                         "valueFrom": { 
                                             "fieldRef": { 
+                                                "fieldPath": "metadata.namespace"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "APPLICATION_NAME",
+                                        "value": "${APPLICATION_NAME}"
+                                    },
+                                    {
+                                        "name": "AMQ_USER",
+                                        "value": "${MQ_USERNAME}"
+                                    },
+                                    {
+                                        "name": "AMQ_PASSWORD",
+                                        "value": "${MQ_PASSWORD}"
+                                    },
+                                    {
+                                        "name": "AMQ_TRANSPORTS",
+                                        "value": "${MQ_PROTOCOL}"
+                                    },
+                                    {
+                                        "name": "AMQ_QUEUES",
+                                        "value": "${MQ_QUEUES}"
+                                    },
+                                    {
+                                        "name": "AMQ_TOPICS",
+                                        "value": "${MQ_TOPICS}"
+                                    },
+                                    {
+                                        "name": "AMQ_SPLIT",
+                                        "value": "${AMQ_SPLIT}"
+                                    },
+{
+                                        "name": "AMQ_MESH_DISCOVERY_TYPE",
+                                        "value": "${AMQ_MESH_DISCOVERY_TYPE}"
+                                    },
+                                    {
+                                        "name": "AMQ_MESH_SERVICE_NAME",
+                                        "value": "${APPLICATION_NAME}-amq-tcp"
+                                    },
+                                    {
+                                        "name": "AMQ_MESH_SERVICE_NAMESPACE",
+                                        "valueFrom": {
+                                            "fieldRef": {
+                                                "fieldPath": "metadata.namespace"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "AMQ_STORAGE_USAGE_LIMIT",
+                                        "value": "${AMQ_STORAGE_USAGE_LIMIT}"
+                                    }
+                                ]
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "name": "${APPLICATION_NAME}-amq-pvol",
+                                "persistentVolumeClaim": {
+                                    "claimName": "${APPLICATION_NAME}-amq-claim"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${APPLICATION_NAME}-amq-drainer",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "${APPLICATION_NAME}-amq"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
+                                "name": "jboss-amq-62:1.2"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "selector": {
+                    "deploymentConfig": "${APPLICATION_NAME}-amq-drainer"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "${APPLICATION_NAME}-amq-drainer",
+                        "labels": {
+                            "deploymentConfig": "${APPLICATION_NAME}-amq-drainer",
+                            "application": "${APPLICATION_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "terminationGracePeriodSeconds": 60,
+                        "containers": [
+                            {
+                                "name": "${APPLICATION_NAME}-amq-drainer",
+                                "image": "jboss-amq-62",
+                                "command": [
+                                    "/opt/amq/bin/drain.sh"
+                                ],
+                                "imagePullPolicy": "Always",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/opt/amq/data",
+                                        "name": "${APPLICATION_NAME}-amq-pvol"
+                                    }
+                                ],
+                                "ports": [
+                                    {
+                                        "name": "jolokia",
+                                        "containerPort": 8778,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "NAMESPACE",
+                                        "valueFrom": {
+                                            "fieldRef": {
                                                 "fieldPath": "metadata.namespace"
                                             }
                                         }
