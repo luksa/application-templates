@@ -365,7 +365,7 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "${APPLICATION_NAME}-amq"
+                                "${APPLICATION_NAME}-amq-drainer"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
