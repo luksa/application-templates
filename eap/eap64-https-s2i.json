@@ -171,8 +171,14 @@
             "spec": {
                 "ports": [
                     {
+                        "name": "http",
                         "port": 8080,
                         "targetPort": 8080
+                    },
+                    {
+                        "name": "https",
+                        "port": 8443,
+                        "targetPort": 8443
                     }
                 ],
                 "selector": {
@@ -190,30 +196,6 @@
             }
         },
         {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "spec": {
-                "ports": [
-                    {
-                        "port": 8443,
-                        "targetPort": 8443
-                    }
-                ],
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
-                }
-            },
-            "metadata": {
-                "name": "secure-${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "The web server's https port."
-                }
-            }
-        },
-        {
             "kind": "Route",
             "apiVersion": "v1",
             "id": "${APPLICATION_NAME}-http",
@@ -223,13 +205,16 @@
                     "application": "${APPLICATION_NAME}"
                 },
                 "annotations": {
-                    "description": "Route for application's http service."
+                    "description": "Route for application's HTTP service."
                 }
             },
             "spec": {
                 "host": "${HOSTNAME_HTTP}",
                 "to": {
                     "name": "${APPLICATION_NAME}"
+                },
+                "port": {
+                    "targetPort": 8080
                 }
             }
         },
@@ -249,7 +234,10 @@
             "spec": {
                 "host": "${HOSTNAME_HTTPS}",
                 "to": {
-                    "name": "secure-${APPLICATION_NAME}"
+                    "name": "${APPLICATION_NAME}"
+                },
+                "port": {
+                    "targetPort": 8443
                 },
                 "tls": {
                     "termination": "passthrough"
