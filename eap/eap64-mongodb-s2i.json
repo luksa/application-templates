@@ -443,9 +443,6 @@
                     }
                 ],
                 "replicas": 1,
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
-                },
                 "template": {
                     "metadata": {
                         "name": "${APPLICATION_NAME}",
@@ -677,9 +674,6 @@
                     }
                 ],
                 "replicas": 1,
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}-mongodb"
-                },
                 "template": {
                     "metadata": {
                         "name": "${APPLICATION_NAME}-mongodb",
