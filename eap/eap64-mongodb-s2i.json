@@ -239,7 +239,8 @@
                     }
                 ],
                 "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "eap"
                 }
             },
             "metadata": {
@@ -263,7 +264,8 @@
                     }
                 ],
                 "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "eap"
                 }
             },
             "metadata": {
@@ -287,7 +289,8 @@
                     }
                 ],
                 "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}-mongodb"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "mongodb"
                 }
             },
             "metadata": {
@@ -447,8 +450,8 @@
                     "metadata": {
                         "name": "${APPLICATION_NAME}",
                         "labels": {
-                            "deploymentConfig": "${APPLICATION_NAME}",
-                            "application": "${APPLICATION_NAME}"
+                            "application": "${APPLICATION_NAME}",
+                            "component": "eap"
                         }
                     },
                     "spec": {
@@ -678,8 +681,8 @@
                     "metadata": {
                         "name": "${APPLICATION_NAME}-mongodb",
                         "labels": {
-                            "deploymentConfig": "${APPLICATION_NAME}-mongodb",
-                            "application": "${APPLICATION_NAME}"
+                            "application": "${APPLICATION_NAME}",
+                            "component": "mongodb"
                         }
                     },
                     "spec": {
