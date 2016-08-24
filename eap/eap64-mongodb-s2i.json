@@ -246,7 +246,8 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "eap"
                 },
                 "annotations": {
                     "description": "The web server's http port."
@@ -271,7 +272,8 @@
             "metadata": {
                 "name": "secure-${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "eap"
                 },
                 "annotations": {
                     "description": "The web server's https port."
@@ -296,7 +298,8 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}-mongodb",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "mongodb"
                 },
                 "annotations": {
                     "description": "The database server's port."
@@ -310,7 +313,8 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "eap"
                 },
                 "annotations": {
                     "description": "Route for application's http service."
@@ -330,7 +334,8 @@
             "metadata": {
                 "name": "secure-${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "eap"
                 },
                 "annotations": {
                     "description": "Route for application's https service."
@@ -420,7 +425,8 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "eap"
                 }
             },
             "spec": {
@@ -650,7 +656,8 @@
             "metadata": {
                 "name": "${APPLICATION_NAME}-mongodb",
                 "labels": {
-                    "application": "${APPLICATION_NAME}"
+                    "application": "${APPLICATION_NAME}",
+                    "component": "mongodb"
                 }
             },
             "spec": {
