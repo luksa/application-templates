@@ -1,0 +1,285 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "annotations": {
+            "iconClass": "icon-mysql-database",
+            "tags": "javaee,jboss,hidden",
+            "version": "1.4.11",
+            "openshift.io/display-name": "MySQL (Ephemeral)",
+            "openshift.io/provider-display-name": "Red Hat, Inc.",
+            "description": "An example EAP 6 application with a MySQL database. For more information about using this template, see https://github.com/jboss-openshift/application-templates.",
+            "template.openshift.io/long-description": "This template defines resources needed to develop Red Hat Enterprise Application Server 6.4 based application, including a build configuration, application deployment configuration, database deployment configuration for MySQL using ephemeral (temporary) storage and secure communication using https.",
+            "template.openshift.io/documentation-url": "https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform/",
+            "template.openshift.io/support-url": "https://access.redhat.com"
+        },
+        "name": "mysql-ephemeral"
+    },
+    "labels": {
+        "template": "mysql-ephemeral",
+        "xpaas": "1.4.11"
+    },
+    "message": "A new MySQL database with ephemeral storage has been created in your project. The username/password for accessing the MySQL database \"${DB_DATABASE}\" is ${DB_USERNAME}/${DB_PASSWORD}.",
+    "parameters": [
+        {
+            "displayName": "Application Name",
+            "description": "The name for the application.",
+            "name": "APPLICATION_NAME",
+            "value": "database",
+            "required": true
+        },
+        {
+            "displayName": "Database Name",
+            "description": "Database name",
+            "name": "DB_DATABASE",
+            "value": "root",
+            "required": true
+        },
+        {
+            "displayName": "MySQL Lower Case Table Names",
+            "description": "Sets how the table names are stored and compared.",
+            "name": "MYSQL_LOWER_CASE_TABLE_NAMES",
+            "required": false
+        },
+        {
+            "displayName": "MySQL Maximum number of connections",
+            "description": "The maximum permitted number of simultaneous client connections.",
+            "name": "MYSQL_MAX_CONNECTIONS",
+            "required": false
+        },
+        {
+            "displayName": "MySQL FullText Minimum Word Length",
+            "description": "The minimum length of the word to be included in a FULLTEXT index.",
+            "name": "MYSQL_FT_MIN_WORD_LEN",
+            "required": false
+        },
+        {
+            "displayName": "MySQL FullText Maximum Word Length",
+            "description": "The maximum length of the word to be included in a FULLTEXT index.",
+            "name": "MYSQL_FT_MAX_WORD_LEN",
+            "required": false
+        },
+        {
+            "displayName": "MySQL AIO",
+            "description": "Controls the innodb_use_native_aio setting value if the native AIO is broken.",
+            "name": "MYSQL_AIO",
+            "required": false
+        },
+        {
+            "displayName": "Database Username",
+            "description": "Database user name",
+            "name": "DB_USERNAME",
+            "from": "user[a-zA-Z0-9]{3}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "displayName": "Database Password",
+            "description": "Database user password",
+            "name": "DB_PASSWORD",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "displayName": "ImageStream Namespace",
+            "description": "Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.",
+            "name": "IMAGE_STREAM_NAMESPACE",
+            "value": "openshift",
+            "required": true
+        },
+        {
+            "displayName": "MySQL Image Stream Tag",
+            "description": "The tag to use for the \"mysql\" image stream.  Typically, this aligns with the major.minor version of MySQL.",
+            "name": "MYSQL_IMAGE_STREAM_TAG",
+            "value": "5.7",
+            "required": true
+        }
+    ],
+    "objects": [
+        {
+            "kind": "Secret",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${APPLICATION_NAME}",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "The username, password and admin password for the database."
+                }
+            },
+            "stringData": {
+                "DB_TYPE": "mysql",
+                "DB_USERNAME": "${DB_USERNAME}",
+                "DB_PASSWORD": "${DB_PASSWORD}",
+                "DB_DATABASE": "${DB_DATABASE}"
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "spec": {
+                "ports": [
+                    {
+                        "port": 3306,
+                        "targetPort": 3306
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "${APPLICATION_NAME}-mysql"
+                }
+            },
+            "metadata": {
+                "name": "${APPLICATION_NAME}-mysql",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "The database server's port."
+                }
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${APPLICATION_NAME}-mysql",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "${APPLICATION_NAME}-mysql"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
+                                "name": "mysql:${MYSQL_IMAGE_STREAM_TAG}"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "selector": {
+                    "deploymentConfig": "${APPLICATION_NAME}-mysql"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "${APPLICATION_NAME}-mysql",
+                        "labels": {
+                            "deploymentConfig": "${APPLICATION_NAME}-mysql",
+                            "application": "${APPLICATION_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "terminationGracePeriodSeconds": 60,
+                        "containers": [
+                            {
+                                "name": "${APPLICATION_NAME}-mysql",
+                                "image": "mysql",
+                                "imagePullPolicy": "Always",
+                                "ports": [
+                                    {
+                                        "containerPort": 3306,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "timeoutSeconds": 1,
+                                    "initialDelaySeconds": 5,
+                                    "exec": {
+                                        "command": [ "/bin/sh", "-i", "-c",
+                                            "MYSQL_PWD=\"$MYSQL_PASSWORD\" mysql -h 127.0.0.1 -u $MYSQL_USER -D $MYSQL_DATABASE -e 'SELECT 1'"]
+                                    }
+                                },
+                                "livenessProbe": {
+                                    "timeoutSeconds": 1,
+                                    "initialDelaySeconds": 30,
+                                    "tcpSocket": {
+                                        "port": 3306
+                                    }
+                                },
+                                "env": [
+                                    {
+                                        "name": "MYSQL_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_USERNAME"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MYSQL_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_PASSWORD"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MYSQL_DATABASE",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_DATABASE"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MYSQL_LOWER_CASE_TABLE_NAMES",
+                                        "value": "${MYSQL_LOWER_CASE_TABLE_NAMES}"
+                                    },
+                                    {
+                                        "name": "MYSQL_MAX_CONNECTIONS",
+                                        "value": "${MYSQL_MAX_CONNECTIONS}"
+                                    },
+                                    {
+                                        "name": "MYSQL_FT_MIN_WORD_LEN",
+                                        "value": "${MYSQL_FT_MIN_WORD_LEN}"
+                                    },
+                                    {
+                                        "name": "MYSQL_FT_MAX_WORD_LEN",
+                                        "value": "${MYSQL_FT_MAX_WORD_LEN}"
+                                    },
+                                    {
+                                        "name": "MYSQL_AIO",
+                                        "value": "${MYSQL_AIO}"
+                                    }
+                                ],
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/var/lib/mysql/data",
+                                        "name": "${APPLICATION_NAME}-data"
+                                    }
+                                ]
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": ""
+                                },
+                                "name": "${APPLICATION_NAME}-data"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}
