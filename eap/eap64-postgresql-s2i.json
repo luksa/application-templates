@@ -753,7 +753,7 @@
                                     },
                                     {
                                         "name": "TIMER_SERVICE_DATA_STORE",
-                                        "value": "${APPLICATION_NAME}-postgresql"
+                                        "value": "${APPLICATION_NAME}-$(DB_TYPE)"
                                     },
                                     {
                                         "name": "AUTO_DEPLOY_EXPLODED",

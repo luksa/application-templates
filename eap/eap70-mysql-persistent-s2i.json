@@ -782,11 +782,11 @@
                                     },
                                     {
                                         "name": "DEFAULT_JOB_REPOSITORY",
-                                        "value": "${APPLICATION_NAME}-mysql"
+                                        "value": "${APPLICATION_NAME}-$(DB_TYPE)"
                                     },
                                     {
                                         "name": "TIMER_SERVICE_DATA_STORE",
-                                        "value": "${APPLICATION_NAME}-mysql"
+                                        "value": "${APPLICATION_NAME}-$(DB_TYPE)"
                                     }
                                 ]
                             }
