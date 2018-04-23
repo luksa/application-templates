@@ -296,6 +296,25 @@
     ],
     "objects": [
         {
+            "kind": "Secret",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${APPLICATION_NAME}",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "The username, password and admin password for the database."
+                }
+            },
+            "stringData": {
+                "DB_USERNAME": "${DB_USERNAME}",
+                "DB_PASSWORD": "${DB_PASSWORD}",
+                "DB_DATABASE": "${DB_DATABASE}",
+                "DB_ADMIN_PASSWORD": "${DB_ADMIN_PASSWORD}"
+            }
+        },
+        {
             "kind": "Service",
             "apiVersion": "v1",
             "spec": {
@@ -639,19 +658,39 @@
                                     },
                                     {
                                         "name": "DB_USERNAME",
-                                        "value": "${DB_USERNAME}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_USERNAME"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "DB_PASSWORD",
-                                        "value": "${DB_PASSWORD}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_PASSWORD"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "DB_DATABASE",
-                                        "value": "${DB_DATABASE}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_DATABASE"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "DB_ADMIN_PASSWORD",
-                                        "value": "${DB_ADMIN_PASSWORD}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_ADMIN_PASSWORD"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "DB_MIN_POOL_SIZE",
@@ -832,19 +871,39 @@
                                 "env": [
                                     {
                                         "name": "MONGODB_USER",
-                                        "value": "${DB_USERNAME}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_USERNAME"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "MONGODB_PASSWORD",
-                                        "value": "${DB_PASSWORD}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_PASSWORD"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "MONGODB_DATABASE",
-                                        "value": "${DB_DATABASE}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_DATABASE"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "MONGODB_ADMIN_PASSWORD",
-                                        "value": "${DB_ADMIN_PASSWORD}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_ADMIN_PASSWORD"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "MONGODB_NOPREALLOC",

@@ -282,6 +282,24 @@
     ],
     "objects": [
         {
+            "kind": "Secret",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${APPLICATION_NAME}",
+                "labels": {
+                    "application": "${APPLICATION_NAME}"
+                },
+                "annotations": {
+                    "description": "The username, password and admin password for the database."
+                }
+            },
+            "stringData": {
+                "DB_USERNAME": "${DB_USERNAME}",
+                "DB_PASSWORD": "${DB_PASSWORD}",
+                "DB_DATABASE": "${DB_DATABASE}"
+            }
+        },
+        {
             "kind": "Service",
             "apiVersion": "v1",
             "spec": {
@@ -625,15 +643,30 @@
                                     },
                                     {
                                         "name": "DB_USERNAME",
-                                        "value": "${DB_USERNAME}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_USERNAME"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "DB_PASSWORD",
-                                        "value": "${DB_PASSWORD}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_PASSWORD"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "DB_DATABASE",
-                                        "value": "${DB_DATABASE}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_DATABASE"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "TX_DATABASE_PREFIX_MAPPING",
@@ -826,15 +859,30 @@
                                 "env": [
                                     {
                                         "name": "POSTGRESQL_USER",
-                                        "value": "${DB_USERNAME}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_USERNAME"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "POSTGRESQL_PASSWORD",
-                                        "value": "${DB_PASSWORD}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_PASSWORD"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "POSTGRESQL_DATABASE",
-                                        "value": "${DB_DATABASE}"
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_DATABASE"
+                                            }
+                                        }
                                     },
                                     {
                                         "name": "POSTGRESQL_MAX_CONNECTIONS",
