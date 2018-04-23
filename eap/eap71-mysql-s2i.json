@@ -312,6 +312,7 @@
                 }
             },
             "stringData": {
+                "DB_TYPE": "mysql",
                 "DB_USERNAME": "${DB_USERNAME}",
                 "DB_PASSWORD": "${DB_PASSWORD}",
                 "DB_DATABASE": "${DB_DATABASE}"
@@ -652,8 +653,17 @@
                                 ],
                                 "env": [
                                     {
+                                        "name": "DB_TYPE",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_TYPE"
+                                            }
+                                        }
+                                    },
+                                    {
                                         "name": "DB_SERVICE_PREFIX_MAPPING",
-                                        "value": "${APPLICATION_NAME}-mysql=DB"
+                                        "value": "${APPLICATION_NAME}-$(DB_TYPE)=DB"
                                     },
                                     {
                                         "name": "DB_JNDI",
@@ -688,7 +698,7 @@
                                     },
                                     {
                                         "name": "TX_DATABASE_PREFIX_MAPPING",
-                                        "value": "${APPLICATION_NAME}-mysql=DB"
+                                        "value": "${APPLICATION_NAME}-$(DB_TYPE)=DB"
                                     },
                                     {
                                         "name": "DB_MIN_POOL_SIZE",

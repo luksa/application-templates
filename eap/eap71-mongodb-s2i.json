@@ -308,6 +308,7 @@
                 }
             },
             "stringData": {
+                "DB_TYPE": "mongodb",
                 "DB_USERNAME": "${DB_USERNAME}",
                 "DB_PASSWORD": "${DB_PASSWORD}",
                 "DB_DATABASE": "${DB_DATABASE}",
@@ -649,8 +650,17 @@
                                 ],
                                 "env": [
                                     {
+                                        "name": "DB_TYPE",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${APPLICATION_NAME}",
+                                                "key": "DB_TYPE"
+                                            }
+                                        }
+                                    },
+                                    {
                                         "name": "DB_SERVICE_PREFIX_MAPPING",
-                                        "value": "${APPLICATION_NAME}-mongodb=DB"
+                                        "value": "${APPLICATION_NAME}-$(DB_TYPE)=DB"
                                     },
                                     {
                                         "name": "DB_JNDI",
