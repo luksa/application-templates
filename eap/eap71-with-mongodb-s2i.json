@@ -9,23 +9,30 @@
             "openshift.io/display-name": "JBoss EAP 7.1 + MongoDB (with https)",
             "openshift.io/provider-display-name": "Red Hat, Inc.",
             "description": "An example EAP 7 application with a MongoDB database. For more information about using this template, see https://github.com/jboss-openshift/application-templates.",
-            "template.openshift.io/long-description": "This template defines resources needed to develop Red Hat Enterprise Application Server 7.1 based application, including a build configuration, application deployment configuration, database deployment configuration for MongoDB using persistence and secure communication using https.",
+            "template.openshift.io/long-description": "This template defines resources needed to develop Red Hat Enterprise Application Server 7.1 based application, including a build configuration, application deployment configuration, database deployment configuration for MongoDB using ephemeral (temporary) storage and secure communication using https.",
             "template.openshift.io/documentation-url": "https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform/",
             "template.openshift.io/support-url": "https://access.redhat.com"
         },
-        "name": "eap71-mongodb-persistent-s2i"
+        "name": "eap71-with-mongodb-s2i"
     },
     "labels": {
-        "template": "eap71-mongodb-persistent-s2i",
+        "template": "eap71-with-mongodb-s2i",
         "xpaas": "1.4.11"
     },
-    "message": "A new EAP 7 and MongoDB persistent based application with SSL support has been created in your project. The username/password for accessing the MongoDB database \"${DB_DATABASE}\" is ${DB_USERNAME}/${DB_PASSWORD} (Admin password is \"${DB_ADMIN_PASSWORD}\"). Please be sure to create the following secrets: \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; \"${JGROUPS_ENCRYPT_SECRET}\" containing the ${JGROUPS_ENCRYPT_KEYSTORE} file used for securing JGroups communications.",
+    "message": "A new EAP 7 and MongoDB based application with SSL support has been created in your project. The username/password for accessing the MongoDB database \"${DB_DATABASE}\" is ${DB_USERNAME}/${DB_PASSWORD} (Admin password is \"${DB_ADMIN_PASSWORD}\"). Please be sure to create the following secrets: \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; \"${JGROUPS_ENCRYPT_SECRET}\" containing the ${JGROUPS_ENCRYPT_KEYSTORE} file used for securing JGroups communications.",
     "parameters": [
         {
             "displayName": "Application Name",
             "description": "The name for the application.",
             "name": "APPLICATION_NAME",
             "value": "eap-app",
+            "required": true
+        },
+        {
+            "displayName": "Database Secret Name",
+            "description": "The name of the secret holding the database credentials (it is the same as the APPLICATION_NAME parameter you used when processing the database template).",
+            "name": "DB_APPLICATION_NAME",
+            "value": "database",
             "required": true
         },
         {
@@ -69,20 +76,6 @@
             "name": "DB_JNDI",
             "value": "",
             "required": false
-        },
-        {
-            "displayName": "Database Name",
-            "description": "Database name",
-            "name": "DB_DATABASE",
-            "value": "root",
-            "required": true
-        },
-        {
-            "displayName": "Database Volume Capacity",
-            "description": "Size of persistent storage for database volume.",
-            "name": "VOLUME_CAPACITY",
-            "value": "1Gi",
-            "required": true
         },
         {
             "displayName": "Queues",
@@ -152,51 +145,9 @@
             "required": false
         },
         {
-            "displayName": "MongoDB No Preallocation",
-            "description": "Disable data file preallocation.",
-            "name": "MONGODB_NOPREALLOC",
-            "required": false
-        },
-        {
-            "displayName": "MongoDB Small Files",
-            "description": "Set MongoDB to use a smaller default data file size.",
-            "name": "MONGODB_SMALLFILES",
-            "required": false
-        },
-        {
-            "displayName": "MongoDB Quiet",
-            "description": "Runs MongoDB in a quiet mode that attempts to limit the amount of output.",
-            "name": "MONGODB_QUIET",
-            "required": false
-        },
-        {
             "displayName": "A-MQ cluster password",
             "description": "A-MQ cluster admin password",
             "name": "MQ_CLUSTER_PASSWORD",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "displayName": "Database Username",
-            "description": "Database user name",
-            "name": "DB_USERNAME",
-            "from": "user[a-zA-Z0-9]{3}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "displayName": "Database Password",
-            "description": "Database user password",
-            "name": "DB_PASSWORD",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "displayName": "Database admin password",
-            "description": "Database admin password",
-            "name": "DB_ADMIN_PASSWORD",
             "from": "[a-zA-Z0-9]{8}",
             "generate": "expression",
             "required": true
@@ -288,13 +239,6 @@
             "required": false
         },
         {
-            "displayName": "MongoDB Image Stream Tag",
-            "description": "The tag to use for the \"mongodb\" image stream.  Typically, this aligns with the major.minor version of MongoDB.",
-            "name": "MONGODB_IMAGE_STREAM_TAG",
-            "value": "3.2",
-            "required": true
-        },
-        {
             "description": "Container memory limit",
             "name": "MEMORY_LIMIT",
             "value": "1Gi",
@@ -302,26 +246,6 @@
         }
     ],
     "objects": [
-        {
-            "kind": "Secret",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "The username, password and admin password for the database."
-                }
-            },
-            "stringData": {
-                "DB_TYPE": "mongodb",
-                "DB_USERNAME": "${DB_USERNAME}",
-                "DB_PASSWORD": "${DB_PASSWORD}",
-                "DB_DATABASE": "${DB_DATABASE}",
-                "DB_ADMIN_PASSWORD": "${DB_ADMIN_PASSWORD}"
-            }
-        },
         {
             "kind": "Service",
             "apiVersion": "v1",
@@ -343,7 +267,7 @@
                 },
                 "annotations": {
                     "description": "The web server's http port.",
-                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"${APPLICATION_NAME}-mongodb\", \"kind\": \"Service\"}]"
+                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"${DB_APPLICATION_NAME}-mongodb\", \"kind\": \"Service\"}]"
                 }
             }
         },
@@ -368,31 +292,7 @@
                 },
                 "annotations": {
                     "description": "The web server's https port.",
-                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"${APPLICATION_NAME}-mongodb\", \"kind\": \"Service\"}]"
-                }
-            }
-        },
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "spec": {
-                "ports": [
-                    {
-                        "port": 27017,
-                        "targetPort": 27017
-                    }
-                ],
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}-mongodb"
-                }
-            },
-            "metadata": {
-                "name": "${APPLICATION_NAME}-mongodb",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "The database server's port."
+                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"${DB_APPLICATION_NAME}-mongodb\", \"kind\": \"Service\"}]"
                 }
             }
         },
@@ -660,14 +560,14 @@
                                         "name": "DB_TYPE",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "${APPLICATION_NAME}",
+                                                "name": "${DB_APPLICATION_NAME}",
                                                 "key": "DB_TYPE"
                                             }
                                         }
                                     },
                                     {
                                         "name": "DB_SERVICE_PREFIX_MAPPING",
-                                        "value": "${APPLICATION_NAME}-$(DB_TYPE)=DB"
+                                        "value": "${DB_APPLICATION_NAME}-$(DB_TYPE)=DB"
                                     },
                                     {
                                         "name": "DB_JNDI",
@@ -677,7 +577,7 @@
                                         "name": "DB_USERNAME",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "${APPLICATION_NAME}",
+                                                "name": "${DB_APPLICATION_NAME}",
                                                 "key": "DB_USERNAME"
                                             }
                                         }
@@ -686,7 +586,7 @@
                                         "name": "DB_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "${APPLICATION_NAME}",
+                                                "name": "${DB_APPLICATION_NAME}",
                                                 "key": "DB_PASSWORD"
                                             }
                                         }
@@ -695,7 +595,7 @@
                                         "name": "DB_DATABASE",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "${APPLICATION_NAME}",
+                                                "name": "${DB_APPLICATION_NAME}",
                                                 "key": "DB_DATABASE"
                                             }
                                         }
@@ -704,7 +604,7 @@
                                         "name": "DB_ADMIN_PASSWORD",
                                         "valueFrom": {
                                             "secretKeyRef": {
-                                                "name": "${APPLICATION_NAME}",
+                                                "name": "${DB_APPLICATION_NAME}",
                                                 "key": "DB_ADMIN_PASSWORD"
                                             }
                                         }
@@ -810,167 +710,6 @@
                                 }
                             }
                         ]
-                    }
-                }
-            }
-        },
-        {
-            "kind": "DeploymentConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-mongodb",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                }
-            },
-            "spec": {
-                "strategy": {
-                    "type": "Recreate"
-                },
-                "triggers": [
-                    {
-                        "type": "ImageChange",
-                        "imageChangeParams": {
-                            "automatic": true,
-                            "containerNames": [
-                                "${APPLICATION_NAME}-mongodb"
-                            ],
-                            "from": {
-                                "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
-                                "name": "mongodb:${MONGODB_IMAGE_STREAM_TAG}"
-                            }
-                        }
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ],
-                "replicas": 1,
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}-mongodb"
-                },
-                "template": {
-                    "metadata": {
-                        "name": "${APPLICATION_NAME}-mongodb",
-                        "labels": {
-                            "deploymentConfig": "${APPLICATION_NAME}-mongodb",
-                            "application": "${APPLICATION_NAME}"
-                        }
-                    },
-                    "spec": {
-                        "terminationGracePeriodSeconds": 60,
-                        "containers": [
-                            {
-                                "name": "${APPLICATION_NAME}-mongodb",
-                                "image": "mongodb",
-                                "imagePullPolicy": "Always",
-                                "ports": [
-                                    {
-                                        "containerPort": 27017,
-                                        "protocol": "TCP"
-                                    }
-                                ],
-                                "readinessProbe": {
-                                    "timeoutSeconds": 1,
-                                    "initialDelaySeconds": 3,
-                                    "exec": {
-                                        "command": [ "/bin/sh", "-i", "-c", "mongo 127.0.0.1:27017/$MONGODB_DATABASE -u $MONGODB_USER -p $MONGODB_PASSWORD --eval=\"quit()\""]
-                                    }
-                                },
-                                "livenessProbe": {
-                                    "timeoutSeconds": 1,
-                                    "initialDelaySeconds": 30,
-                                    "tcpSocket": {
-                                        "port": 27017
-                                    }
-                                },
-                                "volumeMounts": [
-                                    {
-                                        "mountPath": "/var/lib/mongodb/data",
-                                        "name": "${APPLICATION_NAME}-mongodb-pvol"
-                                    }
-                                ],
-                                "env": [
-                                    {
-                                        "name": "MONGODB_USER",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "${APPLICATION_NAME}",
-                                                "key": "DB_USERNAME"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "name": "MONGODB_PASSWORD",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "${APPLICATION_NAME}",
-                                                "key": "DB_PASSWORD"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "name": "MONGODB_DATABASE",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "${APPLICATION_NAME}",
-                                                "key": "DB_DATABASE"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "name": "MONGODB_ADMIN_PASSWORD",
-                                        "valueFrom": {
-                                            "secretKeyRef": {
-                                                "name": "${APPLICATION_NAME}",
-                                                "key": "DB_ADMIN_PASSWORD"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "name": "MONGODB_NOPREALLOC",
-                                        "value": "${MONGODB_NOPREALLOC}"
-                                    },
-                                    {
-                                        "name": "MONGODB_SMALLFILES",
-                                        "value": "${MONGODB_SMALLFILES}"
-                                    },
-                                    {
-                                        "name": "MONGODB_QUIET",
-                                        "value": "${MONGODB_QUIET}"
-                                    }
-                                ]
-                            }
-                        ],
-                        "volumes": [
-                            {
-                                "name": "${APPLICATION_NAME}-mongodb-pvol",
-                                "persistentVolumeClaim": {
-                                    "claimName": "${APPLICATION_NAME}-mongodb-claim"
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "v1",
-            "kind": "PersistentVolumeClaim",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-mongodb-claim",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                }
-            },
-            "spec": {
-                "accessModes": [
-                    "ReadWriteOnce"
-                ],
-                "resources": {
-                    "requests": {
-                        "storage": "${VOLUME_CAPACITY}"
                     }
                 }
             }
