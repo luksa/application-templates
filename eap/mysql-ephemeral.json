@@ -4,7 +4,7 @@
     "metadata": {
         "annotations": {
             "iconClass": "icon-mysql-database",
-            "tags": "javaee,jboss,hidden",
+            "tags": "javaee,jboss",
             "version": "1.4.11",
             "openshift.io/display-name": "MySQL (Ephemeral)",
             "openshift.io/provider-display-name": "Red Hat, Inc.",
